@@ -11,7 +11,7 @@ Reddit generates ~2 million comments / day. 480,000 of those comments are banned
 
 Social Media companies take platform abuse seriously.
 
-This project aims to automate the process of collecting the necessary data to run in depth analysis on reddit comments. Latent Diriclecht Allocation is used to extract topics from a corpus of reddit comments. A nueral network is trained on these topics of intent. A data pipeline ingests reddit data to classify reddit comment by intent.
+This project aims to automate the process of collecting the necessary data to run in depth analysis on reddit comments. Latent Diriclecht Allocation is used to extract topics from a corpus of reddit comments. A neural network is trained on these topics of intent. A data pipeline ingests reddit data to classify reddit comment by intent.
 
 # Approach
 ```
