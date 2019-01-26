@@ -100,6 +100,22 @@ DataProcessor draws inspiration from a pandas DataFrame.
     bin/kakfa-console-avro-consumer --bootstrap-server localhost:9092 --topic avro-persons
 ```
 
+## Download / install  Maven
+```
+    wget https://www-eu.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip
+    unzip apache-maven-3.6.0-bin.zip
+    sudo echo "/path/to/apache-maven-3.6.0/bin" >> /etc/paths
+    mvn -v
+```
+
+## Build / run spark job
+```
+    cd reddit-comment-classifier
+    mvn package
+    spark-submit --class proj.StreamProcessor --master local[4] /location/of/proj_0.0.1-0.0.1-jar-with-dependencies.jar
+```
+
+
 
 
 # Test-Instructions
