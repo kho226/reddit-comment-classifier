@@ -50,23 +50,61 @@ DataProcessor draws inspiration from a pandas DataFrame.
  
 
 # Run-Instructions
+## Clone the Repo
+```
+    cd /desired/location
+    git clone https://github.com/kho226/reddit-comment-classifier/
+```
+## Install Confluent
+```
+    cd
+    curl -O http://packages.confluent.io/archive/5.1/confluent-5.1.0-2.11.zip
+    unzip confluent confluent-5.1.0-2.11.zip
+```
+## Start services
+```
+    cd confluent-5.1.0-2.11
+    bin/zookeeper-server-start etc/kafka/zookeeper.properties
+    bin/kafka-server-start etc/kafka/server.properties
+    bin/schema-registry-start etc/schema-registry/schema-registry.properties
+```
 
+## Register schema
 ```
-    cd /directory/containing/run.sh
-    sudo chmod +x ./run.sh
-    ./run.sh
+    cd /location/of/reddit-comment-classifier/src/main/resources/register_schema.py
+    python register_schema.py http://localhost:8081 persons-avro person.avsc
+    curl http://localhost:8081/subjects/persons-avro-value/versions/1
 ```
+
+## Install Gradle
+```
+    brew install gradle
+```
+
+## Build Jars
+```
+    cd /location/of/reddit-comment-classifier
+    gradle init
+    ./gradlew build
+```
+
+## Run Jars
+```
+    java -jar build/libs/utils.jar
+```
+
+## Start Consumer
+```
+    cd
+    cd /location/of/confluent-5.1.0-2.11
+    bin/kakfa-console-avro-consumer --bootstrap-server localhost:9092 --topic avro-persons
+```
+
+
 
 # Test-Instructions
 
 ```
-    cd /directory/containing/run.sh
-    cd src
-    python test_parser.py
-    python test_dataProcessor.py
-
-    cd ..
-    cd insight_testsuite
-    ./run_tests.sh
+    tbd
 ```
 
