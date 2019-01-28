@@ -3,10 +3,15 @@ package proj
 import java.time.{LocalDate, Period}
 
 import proj.Constants
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DataTypes, StructType}
+
+//elastic search imports
+import com.typesafe.config.ConfigFactory
+import org.elasticsearch.hadoop.cfg.ConfigurationOptions
+
 
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
@@ -16,58 +21,49 @@ object StreamsProcessor {
 
 class StreamsProcessor(brokers: String) {
 
+  private val config = ConfigFactory.load()
+
+  private val master = config.getString("spark.master")
+
+  private val pathToJSONResource = config.getString("spark.json.resource.path")
+
+  private val elasticsearchUser = config.getString("spark.elasticsearch.username")
+  private val elasticsearchPass = config.getString("spark.elasticsearch.password")
+  private val elasticsearchHost = config.getString("spark.elasticsearch.host")
+  private val elasticsearchPort = config.getString("spark.elasticsearch.port")
+
+  private val outputMode = config.getString("spark.elasticsearch.output.mode")
+  private val destination = config.getString("spark.elasticsearch.data.source")
+  private val checkpointLocation = config.getString("spark.elasticsearch.checkpoint.location")
+  private val index = config.getString("spark.elasticsearch.index")
+  private val docType = config.getString("spark.elasticsearch.doc.type")
+  private val indexAndDocType = s"$index/$docType"
+
+
   def process(): Unit = {
 
     val spark = SparkSession.builder()
+      .config(ConfigurationOptions.ES_NET_HTTP_AUTH_USER, elasticsearchUser)
+      .config(ConfigurationOptions.ES_NET_HTTP_AUTH_PASS, elasticsearchPass)
+      .config(ConfigurationOptions.ES_NODES, elasticsearchHost)
+      .config(ConfigurationOptions.ES_PORT, elasticsearchPort)
       .appName("proj")
-      .master("local[*]")
+      .master(master)
       .getOrCreate()
 
-    import spark.implicits._
 
-    val inputDf = spark.readStream
-      .format("kafka")
-      .option("kafka.bootstrap.servers", brokers)
-      .option("subscribe", Constants.personsTopic)
-      .load()
+   val df = spark.readStream
+        .format("kafka")
+        .option("kafka.bootstrap.servers", brokers)
+        .option("subscribe", "persons-avro")
+        .load()
 
-    val personJsonDf = inputDf.selectExpr("CAST(value AS STRING)")
 
-    val struct = new StructType()
-      .add("firstName", DataTypes.StringType)
-      .add("lastName", DataTypes.StringType)
-      .add("birthDate", DataTypes.StringType)
-    val personNestedDf = personJsonDf.select(from_json($"value", struct).as("person"))
+  val query = df.writeStream
+        .outputMode("append")
+        .format("console")
+        .start()
 
-    val personFlattenedDf = personNestedDf.selectExpr("person.firstName", "person.lastName", "person.birthDate")
+  query.awaitTermination()
 
-    val personDf = personFlattenedDf.withColumn("birthDate", to_timestamp($"birthDate", "yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
-
-    val ageFunc: java.sql.Timestamp => Int = birthDate => {
-      val birthDateLocal = birthDate.toLocalDateTime().toLocalDate()
-      val age = Period.between(birthDateLocal, LocalDate.now()).getYears()
-      age
-    }
-    val ageUdf: UserDefinedFunction = udf(ageFunc, DataTypes.IntegerType)
-    val processedDf = personDf.withColumn("age", ageUdf.apply($"birthDate"))
-
-    val resDf = processedDf.select(
-      concat($"firstName", lit(" "), $"lastName").as("key"),
-      processedDf.col("age").cast(DataTypes.StringType).as("value"))
-
-    val consoleOutput = processedDf.writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
-
-//    val kafkaOutput = resDf.writeStream
-//      .format("kafka")
-//      .option("kafka.bootstrap.servers", brokers)
-//      .option("topic", "ages")
-//      .option("checkpointLocation", "/home/ubuntu/proj/checkpoints/spark")
-//     .start()
-
-    spark.streams.awaitAnyTermination()
   }
-
-}
