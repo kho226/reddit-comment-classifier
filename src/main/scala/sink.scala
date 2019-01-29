@@ -63,7 +63,13 @@ class StreamsProcessor(brokers: String) {
         .outputMode("append")
         .format("console")
         .start()
-
-  query.awaitTermination()
+  df.writeStream
+        .outputMode(outputMode)
+        .format(destination)
+        .option("checkpointLocation", checkpointLocation)
+        .start(indexAndDocType)
+        .awaitTermination()
 
   }
+
+}

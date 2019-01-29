@@ -76,9 +76,14 @@ DataProcessor draws inspiration from a pandas DataFrame.
     curl http://localhost:8081/subjects/persons-avro-value/versions/1
 ```
 
+## Install SDK man
+```
+    curl -s "https://get.sdkman.io" | bash
+```
+
 ## Install Gradle
 ```
-    brew install gradle
+    sdk install gradle
 ```
 
 ## Build Jars
