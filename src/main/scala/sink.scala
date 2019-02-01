@@ -3,6 +3,7 @@ package proj
 import java.time.{LocalDate, Period}
 
 import proj.Constants
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
@@ -11,6 +12,10 @@ import org.apache.spark.sql.types.{DataTypes, StructType}
 //elastic search imports
 import com.typesafe.config.ConfigFactory
 import org.elasticsearch.hadoop.cfg.ConfigurationOptions
+
+//redis connectors
+import com.redislabs.provider.redis._
+
 
 
 object StreamsProcessor {
@@ -39,6 +44,10 @@ class StreamsProcessor(brokers: String) {
   private val docType = config.getString("spark.elasticsearch.doc.type")
   private val indexAndDocType = s"$index/$docType"
 
+  private val redisConfig = new RedisConfig(new RedisEndpoint(config.getString("spark.redis.redisServerDnsAddress"),
+                                                              6379,
+                                                              config.getString("spark.redis.redisPassword")))
+
 
   def process(): Unit = {
 
@@ -59,11 +68,21 @@ class StreamsProcessor(brokers: String) {
         .load()
 
 
-  val query = df.writeStream
-        .outputMode("append")
-        .format("console")
-        .start()
+    val query = df.writeStream
+          .outputMode("append")
+          .format("console")
+          .start()
 
-  query.awaitTermination()
+    val es_df = df.selectExpr("CAST(VALUE as STRING)")
+
+    es_df.writeStream
+         .outputMode(outputMode)
+         .format(destination)
+         .option("checkpointLocation", checkpointLocation)
+         .start(indexAndDocType)
+         .awaitTermination()
 
   }
+
+}
+
