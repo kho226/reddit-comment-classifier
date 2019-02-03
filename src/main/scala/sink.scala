@@ -79,12 +79,12 @@ class StreamsProcessor(brokers: String) {
                            .start()
 
 
-    //reddit_df.writeStream
-    //       .outputMode(outputMode)
-    //       .format(destination)
-    //       .option("checkpointLocation", checkpointLocation)
-    //       .start("reddit-comments/personal")
-    //       .awaitTermination()
+    reddit_df.writeStream
+           .outputMode(outputMode)
+           .format(destination)
+           .option("checkpointLocation", checkpointLocation)
+           .start("reddit-comments/personal")
+           .awaitTermination()
 
 
     reddit_df.printSchema()
