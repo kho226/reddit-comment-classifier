@@ -91,3 +91,5 @@ class StreamsProcessor(brokers: String) {
 
     //query_1.awaitTermination()
     query_2.awaitTermination()
+  }
+}
