@@ -2,7 +2,7 @@ package proj
 
 import java.time.{LocalDate, Period}
 
-import proj.Constants
+import proj.Constants.reddit_schema
 import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
@@ -37,33 +37,39 @@ class StreamsProcessor(brokers: String) {
   private val checkpointLocation = config.getString("spark.elasticsearch.checkpoint.location")
   private val index = config.getString("spark.elasticsearch.index")
   private val docType = config.getString("spark.elasticsearch.doc.type")
-  private val indexAndDocType = s"$index/$docType"
 
 
   def process(): Unit = {
 
-    val spark = SparkSession.builder()
-      .config(ConfigurationOptions.ES_NET_HTTP_AUTH_USER, elasticsearchUser)
-      .config(ConfigurationOptions.ES_NET_HTTP_AUTH_PASS, elasticsearchPass)
-      .config(ConfigurationOptions.ES_NODES, elasticsearchHost)
-      .config(ConfigurationOptions.ES_PORT, elasticsearchPort)
-      .appName("proj")
-      .master(master)
-      .getOrCreate()
+      val spark = SparkSession.builder()
+        .config(ConfigurationOptions.ES_NET_HTTP_AUTH_USER, elasticsearchUser)
+        .config(ConfigurationOptions.ES_NET_HTTP_AUTH_PASS, elasticsearchPass)
+        .config(ConfigurationOptions.ES_NODES, elasticsearchHost)
+        .config(ConfigurationOptions.ES_PORT, elasticsearchPort)
+        .appName("proj")
+        .master(master)
+        .getOrCreate()
+
+      import spark.implicits._
+
+      val stream_df = spark.readStream
+                           .format("kafka")
+                           .option("kafka.bootstrap.servers", brokers)
+                           .option("subscribe", "persons-avro")
+                           .load()
 
 
-   val df = spark.readStream
-        .format("kafka")
-        .option("kafka.bootstrap.servers", brokers)
-        .option("subscribe", "persons-avro")
-        .load()
+
+      val df = stream_df.selectExpr("CAST(value as STRING)")
 
 
-  val query = df.writeStream
-        .outputMode("append")
-        .format("console")
-        .start()
+      val reddit_df = stream_df.select(from_json('value, reddit_schema ) as 'reddit_comment)
 
-  query.awaitTermination()
+      reddit_df.printSchema()
 
-  }
+      val query = reddit_df.writeStream
+                           .outputMode("append")
+                           .format("console")
+                           .start()
+
+      query.awaitTermation()
