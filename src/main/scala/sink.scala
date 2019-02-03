@@ -63,17 +63,12 @@ class StreamsProcessor(brokers: String) {
                           .load()
 
 
-    //val query_1= stream_df.writeStream
-    //                     .outputMode("append")
-    //                     .format("console")
-    //                     .start()
-
     val df = stream_df.selectExpr("CAST(value as STRING)")
 
 
     val reddit_df = df.select(from_json('value, reddit_schema ) as 'reddit_comment)
 
-    val query_2 = reddit_df.writeStream
+    val query = reddit_df.writeStream
                            .outputMode("append")
                            .format("console")
                            .start()
@@ -89,7 +84,6 @@ class StreamsProcessor(brokers: String) {
 
     reddit_df.printSchema()
 
-    //query_1.awaitTermination()
-    query_2.awaitTermination()
+    query.awaitTermination()
   }
 }
