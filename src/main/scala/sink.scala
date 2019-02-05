@@ -16,7 +16,14 @@ import com.typesafe.config.ConfigFactory
 import org.elasticsearch.hadoop.cfg.ConfigurationOptions
 
 //redis connectors
-import com.redislabs.provider.redis._
+//import com.redislabs.provider.redis._
+
+// define the processing in the sink
+class RandomForestMLSinkProvider extends MLSinkProvider {
+  override def process(df: DataFrame) {
+    RandomForestModel.transform(df)
+  }
+}
 
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
@@ -69,9 +76,10 @@ class StreamsProcessor(brokers: String) {
     val reddit_df = df.select(from_json('value, reddit_schema ) as 'reddit_comment)
 
     val query = reddit_df.writeStream
-                           .outputMode("append")
-                           .format("console")
-                           .start()
+                         .format("proj.RandomForestMLSinkProvider")
+                         .queryName("RandomForestQuery")
+                         .option("checkpointLocaion", checkpointLocation)
+                         .start()
 
 
     reddit_df.writeStream
