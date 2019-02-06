@@ -5,13 +5,13 @@ from flask import Flask, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from elasticsearch import Elasticsearch
 from flask_migrate import Migrate
-from flask.ext.redis import FlaskRedis
+from flask_redis import FlaskRedis
 from config import Config 
 
 
 db = SQLAlchemy()
 migrate = Migrate()
-redis = FlaskRedis()
+redis_store = FlaskRedis()
 
 def create_app(config_class=Config): #will not run
 
@@ -20,10 +20,12 @@ def create_app(config_class=Config): #will not run
 
     db.init_app(app)
     migrate.init_app(app, db)
-    redis.init_app(app)
+    redis_store.init_app(app)
 
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         if app.config['ELASTICSEARCH_URL'] else None
+    app.redis_store = redis_store
+    
     
     return app
 

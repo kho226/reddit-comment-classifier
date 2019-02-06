@@ -1,5 +1,5 @@
 from flask import current_app
-from core import redis_store
+
 
 
 def add_to_index(index, model):
@@ -21,8 +21,11 @@ def remove_from_index(index, model):
 def query_index(index, query, docType):
     if not current_app.elasticsearch:
         return [], 0
+    if current_app.redis_store.exists(query):
+        print ("Using cached query")
+        return current_app.redis_store.get(query) 
     search = current_app.elasticsearch.search(
         index=index, doc_type=docType,
         body=query)
-    redis_store.set(index, search) #make sure your REDIS_URL is set within config.py
+    current_app.redis_store.set(query, search, 300) #cache queries for 300 seconds
     return search
