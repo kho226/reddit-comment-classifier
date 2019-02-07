@@ -15,8 +15,6 @@ import org.apache.spark.rdd.RDD
 import com.typesafe.config.ConfigFactory
 import org.elasticsearch.hadoop.cfg.ConfigurationOptions
 
-//redis connectors
-import com.redislabs.provider.redis._
 
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
