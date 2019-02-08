@@ -1,3 +1,4 @@
+import json
 from flask import current_app
 
 
@@ -18,14 +19,17 @@ def remove_from_index(index, model):
     current_app.elasticsearch.delete(index=index, doc_type=index, id=model.id)
 
 
-def query_index(index, query, docType):
+def query_index(index, query, doc_type):
     if not current_app.elasticsearch:
         return [], 0
-    if current_app.redis_store.exists(query):
+    if current_app.redis_store.exists(index):
         print ("Using cached query")
-        return current_app.redis_store.get(query) 
+        cached = current_app.redis_store.get(index) 
+        return json.loads(cached)
     search = current_app.elasticsearch.search(
-        index=index, doc_type=docType,
+        index=index, doc_type=doc_type,
         body=query)
-    current_app.redis_store.set(query, search, 300) #cache queries for 300 seconds
+    current_app.redis_store.set(index, json.dumps(search), 300) 
+    # cache queries for 300 seconds
+    # must be a string, number or bytes
     return search
