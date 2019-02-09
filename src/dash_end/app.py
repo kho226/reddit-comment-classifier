@@ -4,11 +4,14 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly as py
 import plotly.graph_objs as go
+from dash.dependencies import Input, Output
 
 
 import constants
 import redis
 from elasticsearch import Elasticsearch
+
+import random
 
 es = Elasticsearch(constants.elastic["url"])
 redis = redis.StrictRedis(
@@ -45,12 +48,36 @@ app.layout = html.Div(children=[
     '''),
 
     dcc.Graph(
-        id='example-graph',
-        figure=go.Figure(
-            data
-        )
+        id='realtime-bubble-chart'
+    ),
+
+    dcc.Interval(
+        id="interval-component",
+        interval=1*1000,
+        n_intervals=0
     )
 ])
+
+@app.callback(Output('realtime-bubble-chart', "figure"),
+                [Input('interval-component', 'n_intervals')])
+def update(n):
+    #fetch data in real time
+
+    trace = go.Scatter(
+        x=[random.randint(1,20) for i in range(10)],
+        y=[random.randint(1,20) for i in range(10)],
+        mode='markers',
+        marker=dict(
+            size=size,
+            sizemode='area',
+            sizeref=2.*max(size)/(40.**2),
+            sizemin=4
+        )
+    )
+
+    fig = go.Figure([trace])
+    return fig
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
