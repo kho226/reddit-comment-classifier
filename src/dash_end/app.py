@@ -53,7 +53,7 @@ app.layout = html.Div(children=[
 
     dcc.Interval(
         id="interval-component",
-        interval=1*1000,
+        interval=3*1000,
         n_intervals=0
     )
 ])
@@ -63,19 +63,31 @@ app.layout = html.Div(children=[
 def update(n):
     #fetch data in real time
 
-    trace = go.Scatter(
-        x=[random.randint(1,20) for i in range(10)],
-        y=[random.randint(1,20) for i in range(10)],
-        mode='markers',
-        marker=dict(
+    fig = py.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
+    fig['layout']['margin'] = {
+        'l': 30, 'r': 10, 'b': 30, 't': 10
+    }
+    fig['layout']['xaxis'] = {
+        'range' : [1,30]
+    }
+    fig['layout']['yaxis'] = {
+        'range': [1,30]
+    }
+    fig.append_trace({
+        'x': [random.randint(1,20) for i in range(10)],
+        'y': [random.randint(1,20) for i in range(10)],
+        'type' : 'scatter',
+        'mode' : 'markers',
+        'marker' : dict(
             size=size,
             sizemode='area',
             sizeref=2.*max(size)/(40.**2),
-            sizemin=4
+            sizemin=4,
+            color=['rgb(93, 164, 214)', 'rgb(255, 144, 14)',
+               'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+            opacity=[1, 0.8, 0.6, 0.4],
         )
-    )
-
-    fig = go.Figure([trace])
+    },1,1)
     return fig
 
 
