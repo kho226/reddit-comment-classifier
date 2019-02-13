@@ -13,9 +13,6 @@ import org.apache.spark.sql.types.{DataTypes, StructType}
 import com.typesafe.config.ConfigFactory
 import org.elasticsearch.hadoop.cfg.ConfigurationOptions
 
-//redis connectors
-import com.redislabs.provider.redis._
-
 
 
 object StreamsProcessor {
@@ -43,10 +40,6 @@ class StreamsProcessor(brokers: String) {
   private val index = config.getString("spark.elasticsearch.index")
   private val docType = config.getString("spark.elasticsearch.doc.type")
   private val indexAndDocType = s"$index/$docType"
-
-  private val redisConfig = new RedisConfig(new RedisEndpoint(config.getString("spark.redis.redisServerDnsAddress"),
-                                                              6379,
-                                                              config.getString("spark.redis.redisPassword")))
 
 
   def process(): Unit = {
