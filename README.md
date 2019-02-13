@@ -16,34 +16,17 @@ This project aims to automate the process of collecting the necessary data to ru
 # Approach
 ```
       ├── README.md 
-      ├── run.sh
+      ├── pom.xml
       ├── src
-      │   └──h1b_counting.py
-      │   └──dataProcessor.py
-      │   └──test_dataProcessor.py
-      │   └──parser.py
-      │   └──test_parser.py
-      │   └──utils.py
-      ├── input
-      │   └──h1b_input.csv
-      ├── output
-      |   └── top_10_occupations.txt
-      |   └── top_10_states.txt
-      ├── insight_testsuite
-          └── run_tests.sh
-          └── tests
-              └── test_1
-              |   ├── input
-              |   │   └── h1b_input.csv
-              |   |__ output
-              |   |   └── top_10_occupations.txt
-              |   |   └── top_10_states.txt
-              ├── your-own-test_1
-                  ├── input
-                  │   └── h1b_input.csv
-                  |── output
-                  |   |   └── top_10_occupations.txt
-                  |   |   └── top_10_states.txt
+      │   ├── dash_end
+      │   │     └──app.py
+      │   │     └──constants.py
+      │   │     └──venv
+      │   ├── main
+      │   │     └──Constants.scala
+      │   │     └──sink.scala
+      │   ├── utils
+      │         └──kafka_producer.py
 ```
 h1b_counting.py is the entry-point of the program. A DataProcessor object is initialized and aggregates statstics from input files line-by-line. After all files have been processed write the statistics to a txt file.
 DataProcessor draws inspiration from a pandas DataFrame.
