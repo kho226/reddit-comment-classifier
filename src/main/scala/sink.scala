@@ -60,10 +60,10 @@ class StreamsProcessor(brokers: String) {
 
 
 
-      val df = df.selectExpr("CAST(value as STRING)")
+      val df = stream_df.selectExpr("CAST(value as STRING)")
 
 
-      val reddit_df = stream_df.select(from_json('value, reddit_schema ) as 'reddit_comment)
+      val reddit_df = df.select(from_json('value, reddit_schema ) as 'reddit_comment)
 
       reddit_df.printSchema()
 
@@ -72,4 +72,6 @@ class StreamsProcessor(brokers: String) {
                            .format("console")
                            .start()
 
-      query.awaitTermation()
+      query.awaitTermination()
+  }
+}
