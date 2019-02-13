@@ -15,7 +15,7 @@ This project aims to automate the process of collecting the necessary data to ru
 
 # Approach
 ```
-    ├── README.md 
+      ├── README.md 
       ├── pom.xml
       ├── src
       │   ├── dash_end
