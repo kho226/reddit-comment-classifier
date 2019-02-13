@@ -23,9 +23,12 @@ This project aims to automate the process of collecting the necessary data to ru
       │   │     └──constants.py
       │   │     └──venv
       │   ├── main
-      │   │     └──Constants.scala
-      │   │     └──sink.scala
-      │   ├── utils
+      │   │     └──scala
+      │   │         └──Constants.scala
+      │   │         └──MLSink.scala
+      │   │         └──RandomForestModel.scala
+      │   │         └──sink.scala 
+      │   └──utils
       │         └──kafka_producer.py
 ```
 h1b_counting.py is the entry-point of the program. A DataProcessor object is initialized and aggregates statstics from input files line-by-line. After all files have been processed write the statistics to a txt file.
