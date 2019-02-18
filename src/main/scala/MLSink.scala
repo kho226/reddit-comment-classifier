@@ -1,4 +1,4 @@
-package proj
+package trenddit
 
 import org.apache.spark.sql.execution.streaming.Sink
 import org.apache.spark.sql.{DataFrame, SQLContext}

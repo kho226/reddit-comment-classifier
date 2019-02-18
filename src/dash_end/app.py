@@ -98,21 +98,6 @@ def update(n):
         'showticklabels' : False,
         'showline': True,
     }
-    """ fig.append_trace({
-        'x': [15,17,20,18,20,20],
-        'y': [15,15,17,20,25,20],
-        'text': ["Sports", "Media", "Travel", "Dining", "Technology", "Fashion","Politics"],
-        'type' : 'scatter',
-        'mode': 'markers',
-        'marker': dict(
-            color = ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',
-               'rgb(44, 160, 101)', 'rgb(255, 65, 54)',
-               'rgb(255,255,0)'],
-            size=[random.randint(6,100) for i in range(6)],
-            sizemode='area',
-            sizeref=2.*max(size)/(40.**2),
-            sizemin=4)
-    },1,1) """
     fig.append_trace(config_trace(
         x = 15,
         y = 15,
@@ -121,7 +106,7 @@ def update(n):
         mode = 'markers',
         name = 'Sports',
         color = 'rgb(93, 164, 214)',
-        size = random.randint(6,25),
+        size = random.randint(10,25),
         sizemode = 'area',
         sizeref = 2.*max(size)/(40.**2),
         sizemin = 4
@@ -147,7 +132,7 @@ def update(n):
         mode = 'markers',
         name = 'Travel',
         color = 'rgb(44, 160, 101)',
-        size = random.randint(6,25),
+        size = random.randint(10,25),
         sizemode = 'area',
         sizeref = 2.*max(size)/(40.**2),
         sizemin = 4
@@ -160,7 +145,7 @@ def update(n):
         mode = 'markers',
         name = 'Dining',
         color = 'rgb(255, 65, 54)',
-        size = random.randint(6,25),
+        size = random.randint(25,30),
         sizemode = 'area',
         sizeref = 2.*max(size)/(40.**2),
         sizemin = 4
