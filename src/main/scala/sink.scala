@@ -25,7 +25,7 @@ class RandomForestMLSinkProvider extends MLSinkProvider {
 
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
-    new StreamsProcessor("localhost:9092").process()
+    new StreamsProcessor("10.0.0.13:9092").process()
   }
 }
 
