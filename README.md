@@ -34,7 +34,11 @@ This project aims to lower the barrier to entry for in-depth analysis over a lar
       │   ├──utils 
       │   │     └── kafka_producer.py       
 ```
-
+kafka_producer.py will download byte sized chunks of data from s3 and publish them to a kafka topic.
+sink.scala subsrcibes to this topic.
+Incoming messages are classified by RandomForest.scala.
+Classified messages are written to elasticsearch by sink.scala.
+app.py queries elasticsearch and caches frequently used queries in redis.
  
 
 # Run-Instructions
