@@ -1,5 +1,6 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
+
     <groupId> Trenddit </groupId>
     <artifactId> trenddit_0.0.1</artifactId>
     <version> 0.0.1 </version> <name> "Trenddit" </name>
@@ -59,6 +60,23 @@
             <url>http://repo.typesafe.com/typesafe/maven-releases/</url>
         </repository>
     </repositories>
+
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <url>http://packages.confluent.io/maven/</url>
+        </repository>
+        <repository>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <id> central </id>
+                <url>http://central.maven.org/maven2/ </url>
+        </repository>
+    </repositories>
     <dependencies>
          <dependency>
             <groupId>org.scala-lang</groupId>
@@ -81,11 +99,13 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.11</artifactId>
             <version>2.2.1</version>
-        </dependency>    
+        </dependency>         
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql-kafka-0-10_2.11</artifactId>
             <version>2.2.1</version>
+        </dependency>
+            <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming-kafka-0-10 -->
         <dependency>
