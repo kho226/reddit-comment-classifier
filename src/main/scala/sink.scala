@@ -26,7 +26,7 @@ class RandomForestMLSinkProvider extends MLSinkProvider {
 //enter your broker address:port
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
-    new StreamsProcessor("").process()
+    new StreamsProcessor("enter your broker address:port").process()
   }
 }
 
