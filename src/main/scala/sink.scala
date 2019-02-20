@@ -33,16 +33,12 @@ object StreamsProcessor {
 class StreamsProcessor(brokers: String) {
 
   private val config = ConfigFactory.load()
-
   private val master = config.getString("spark.master")
-
   private val pathToJSONResource = config.getString("spark.json.resource.path")
-
   private val elasticsearchUser = config.getString("spark.elasticsearch.username")
   private val elasticsearchPass = config.getString("spark.elasticsearch.password")
   private val elasticsearchHost = config.getString("spark.elasticsearch.host")
   private val elasticsearchPort = config.getString("spark.elasticsearch.port")
-
   private val outputMode = config.getString("spark.elasticsearch.output.mode")
   private val destination = config.getString("spark.elasticsearch.data.source")
   private val checkpointLocation = config.getString("spark.elasticsearch.checkpoint.location")
@@ -51,13 +47,13 @@ class StreamsProcessor(brokers: String) {
   def process(): Unit = {
 
     val spark = SparkSession.builder()
-      .config(ConfigurationOptions.ES_NET_HTTP_AUTH_USER, elasticsearchUser)
-      .config(ConfigurationOptions.ES_NET_HTTP_AUTH_PASS, elasticsearchPass)
-      .config(ConfigurationOptions.ES_NODES, elasticsearchHost)
-      .config(ConfigurationOptions.ES_PORT, elasticsearchPort)
-      .appName("trenddit")
-      .master(master)
-      .getOrCreate()
+                            .config(ConfigurationOptions.ES_NET_HTTP_AUTH_USER, elasticsearchUser)
+                            .config(ConfigurationOptions.ES_NET_HTTP_AUTH_PASS, elasticsearchPass)
+                            .config(ConfigurationOptions.ES_NODES, elasticsearchHost)
+                            .config(ConfigurationOptions.ES_PORT, elasticsearchPort)
+                            .appName("trenddit")
+                            .master(master)
+                            .getOrCreate()
 
     import spark.implicits._
 
@@ -68,17 +64,12 @@ class StreamsProcessor(brokers: String) {
 			                    .option("failOnDataLoss", "false")
                           .load()
 
-
     val df = stream_df.selectExpr("CAST(value as STRING)")
-
-
     val reddit_df = df.select(from_json('value, reddit_schema ) as 'reddit_comment)
-
     val query = reddit_df.writeStream
-			 .outputMode(outputMode)
+			                   .outputMode(outputMode)
                          .format("console")
                          .start()
-
 
     reddit_df.writeStream
              .outputMode(outputMode)
@@ -87,9 +78,7 @@ class StreamsProcessor(brokers: String) {
              .start("reddit-comments/personal")
              .awaitTermination()
 
-
     reddit_df.printSchema()
-
     query.awaitTermination()
   }
 }
