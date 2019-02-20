@@ -40,12 +40,63 @@ Incoming messages are classified by RandomForest.scala.
 Classified messages are written to elasticsearch by sink.scala.
 app.py queries elasticsearch and caches frequently used queries in redis.
  
+# Dependencies
+- elasticsearch 6.5.2
+- spark 2.2.1
+- hadoop 2.7
+- redis 5.0.3
+- python 2.7
+- dash 0.36.0
 
 # Run-Instructions
 ## Clone the Repo
 ```
     cd /desired/location
-    git clone https://github.com/kho226/reddit-comment-classifier/
+    git clone https://github.com/kho226/trenddit
+```
+## Install elasticsearch (https://www.elastic.co/guide/en/elasticsearch/reference/6.5/zip-targz.html)
+```
+    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.2.zip
+    unzip elasticsearch-6.5.2.zip
+```
+## Install elasticsearch discovery-ec2 (https://www.elastic.co/guide/en/elasticsearch/plugins/6.5/discovery-ec2.html)
+```
+   elasticsearch-6.5.2/bin/elastisearch-plugin install discovery-ec2
+   elasticsearch-6.5.2/bin/elasticsearch-keystore create
+   elasticsearch-6.5.2/bin/elasticsearch-keystore add discovery.ec2.access_key
+   elasticsearch-6.5.2/bin/elasticsearch-keystore add discovery.ec2.secret_key
+   
+```
+## Start elasticsearch
+```
+    elasticsearch-6.5.2/bin/elasticsearch
+```
+## Install Redis
+```
+    wget http://download.redis.io/releases/redis-5.0.3.tar.gz
+    tar xzf redis-5.0.3.tar.gz
+    cd redis-5.0.3
+    make
+```
+## Start Redis
+```
+    src/redis-server
+```
+## Install Spark
+```
+    wget https://archive.apache.org/dist/spark/spark-2.2.1/spark-2.2.1-bin-hadoop2.7.tgz
+    tar xvf spark-2.2.1-bin-hadoop2.7.tgz
+```
+## Setup virtualenv for dash
+```
+    cd trenddit/front_end
+    virtualenv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+```
+## run dash app
+```
+    (venv) python app.py
 ```
 ## Install Confluent
 ```
@@ -53,76 +104,34 @@ app.py queries elasticsearch and caches frequently used queries in redis.
     curl -O http://packages.confluent.io/archive/5.1/confluent-5.1.0-2.11.zip
     unzip confluent confluent-5.1.0-2.11.zip
 ```
-## Start services
+## Start Confluent services
 ```
     cd confluent-5.1.0-2.11
     bin/zookeeper-server-start etc/kafka/zookeeper.properties
     bin/kafka-server-start etc/kafka/server.properties
     bin/schema-registry-start etc/schema-registry/schema-registry.properties
 ```
-
-## Register schema
-```
-    cd /location/of/reddit-comment-classifier/src/main/resources/register_schema.py
-    python register_schema.py http://localhost:8081 persons-avro person.avsc
-    curl http://localhost:8081/subjects/persons-avro-value/versions/1
-```
-
 ## Install SDK man
 ```
     curl -s "https://get.sdkman.io" | bash
 ```
-
-## Install Gradle
-```
-    sdk install gradle
-```
-
 ## Install maven
 ```
     sudo apt install maven
 ```
-
-## Build Jars
+## Install confluent-kafka / boto3
 ```
-    cd /location/of/reddit-comment-classifier
-    gradle init
-    ./gradlew build
+    pip install confluent-kafka
+    pip install boto3
 ```
-
-## Run Jars
+## Start kafka_producer
 ```
-    java -jar build/libs/utils.jar
+    cd trenddit/utils
+    python kafka_producer.py
 ```
-
-## Start Consumer
-```
-    cd
-    cd /location/of/confluent-5.1.0-2.11
-    bin/kakfa-console-avro-consumer --bootstrap-server localhost:9092 --topic avro-persons
-```
-
-## Download / install  Maven
-```
-    wget https://www-eu.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip
-    unzip apache-maven-3.6.0-bin.zip
-    sudo echo "/path/to/apache-maven-3.6.0/bin" >> /etc/paths
-    mvn -v
-```
-
 ## Build / run spark job
 ```
-    cd reddit-comment-classifier
+    cd trenddit
     mvn package
-    spark-submit --class proj.StreamProcessor --master local[4] /location/of/proj_0.0.1-0.0.1-jar-with-dependencies.jar
+    spark-submit --master local[*] /location/of/trenddit_0.0.1-0.0.1-jar-with-dependencies.jar
 ```
-
-
-
-
-# Test-Instructions
-
-```
-    tbd
-```
-
