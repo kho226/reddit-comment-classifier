@@ -4,7 +4,7 @@ import org.apache.spark.ml.PipelineModel
 import org.apache.spark.sql.DataFrame
 
 object RandomForestModel{
-    private val model_path = "path/to/model"
+    private val model_path = "models/..."
 
     private val model = PipelineModel.read.load(model_path)
 
