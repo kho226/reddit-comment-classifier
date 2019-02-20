@@ -23,9 +23,10 @@ class RandomForestMLSinkProvider extends MLSinkProvider {
   }
 }
 
+//enter your broker address:port
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
-    new StreamsProcessor("10.0.0.13:9092").process()
+    new StreamsProcessor("").process()
   }
 }
 
@@ -46,7 +47,6 @@ class StreamsProcessor(brokers: String) {
   private val destination = config.getString("spark.elasticsearch.data.source")
   private val checkpointLocation = config.getString("spark.elasticsearch.checkpoint.location")
   private val docType = config.getString("spark.elasticsearch.doc.type")
-  //private val indexAndDocType = s"$index/$docType"
 
   def process(): Unit = {
 
