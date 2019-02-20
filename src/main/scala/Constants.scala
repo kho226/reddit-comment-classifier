@@ -1,4 +1,4 @@
-package proj
+package trenddit
 import java.time.format.DateTimeFormatter
 import org.apache.spark.sql.types.{DataTypes, StructType}
 

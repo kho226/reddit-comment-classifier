@@ -1,8 +1,8 @@
-package proj
+package trenddit
 
 import java.time.{LocalDate, Period}
 
-import proj.Constants.reddit_schema
+import trenddit.Constants.reddit_schema
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.expressions.UserDefinedFunction
@@ -15,8 +15,6 @@ import org.apache.spark.rdd.RDD
 import com.typesafe.config.ConfigFactory
 import org.elasticsearch.hadoop.cfg.ConfigurationOptions
 
-//redis connectors
-//import com.redislabs.provider.redis._
 
 // define the processing in the sink
 class RandomForestMLSinkProvider extends MLSinkProvider {
@@ -27,7 +25,7 @@ class RandomForestMLSinkProvider extends MLSinkProvider {
 
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
-    new StreamsProcessor("localhost:9092").process()
+    new StreamsProcessor("10.0.0.13:9092").process()
   }
 }
 
@@ -57,7 +55,7 @@ class StreamsProcessor(brokers: String) {
       .config(ConfigurationOptions.ES_NET_HTTP_AUTH_PASS, elasticsearchPass)
       .config(ConfigurationOptions.ES_NODES, elasticsearchHost)
       .config(ConfigurationOptions.ES_PORT, elasticsearchPort)
-      .appName("proj")
+      .appName("trenddit")
       .master(master)
       .getOrCreate()
 
@@ -67,6 +65,7 @@ class StreamsProcessor(brokers: String) {
                           .format("kafka")
                           .option("kafka.bootstrap.servers", brokers)
                           .option("subscribe", "persons-avro")
+			  .option("failOnDataLoss", "false")
                           .load()
 
 
@@ -76,18 +75,17 @@ class StreamsProcessor(brokers: String) {
     val reddit_df = df.select(from_json('value, reddit_schema ) as 'reddit_comment)
 
     val query = reddit_df.writeStream
-                         .format("proj.RandomForestMLSinkProvider")
-                         .queryName("RandomForestQuery")
-                         .option("checkpointLocaion", checkpointLocation)
+			 .outputMode(outputMode)
+                         .format("console")
                          .start()
 
 
     reddit_df.writeStream
-           .outputMode(outputMode)
-           .format(destination)
-           .option("checkpointLocation", checkpointLocation)
-           .start("reddit-comments/personal")
-           .awaitTermination()
+             .outputMode(outputMode)
+             .format(destination)
+             .option("checkpointLocation", checkpointLocation)
+             .start("reddit-comments/personal")
+             .awaitTermination()
 
 
     reddit_df.printSchema()

@@ -1,4 +1,4 @@
-package proj
+package trenddit
 
 import org.apache.spark.ml.PipelineModel
 import org.apache.spark.sql.DataFrame

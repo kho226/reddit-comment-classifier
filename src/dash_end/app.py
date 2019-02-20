@@ -44,7 +44,7 @@ app.layout = html.Div(children=[
     html.H1(children='Trenddit'),
 
     html.Div(children='''
-        Realtime analytics of trends in reddit topics
+        Realtime analysis of trends in reddit topics
     '''),
 
     dcc.Graph(
@@ -58,39 +58,103 @@ app.layout = html.Div(children=[
     )
 ])
 
+def config_trace(**kwargs):
+    trace = {
+        'x' : [kwargs.get("x")],
+        'y' : [kwargs.get("y")],
+        'text': kwargs.get('text'),
+        'type' : kwargs.get('type'),
+        'mode' : kwargs.get('mode'),
+        'name' : kwargs.get('name'),
+        'marker' : dict (
+            color = [kwargs.get("color")],
+            size  = kwargs.get("size"),
+            sizemode = kwargs.get("sizemode"),
+            sizeref = kwargs.get("sizeref"),
+            sizemin = kwargs.get("sizemin"))}
+    return trace
+
 @app.callback(Output('realtime-bubble-chart', "figure"),
                 [Input('interval-component', 'n_intervals')])
 def update(n):
     #fetch data in real time
 
+    size = [20, 40, 60, 80, 100, 80, 60, 40, 20, 40]
+
     fig = py.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
+    fig['layout'] = {
+        'showlegend': True
+    } 
     fig['layout']['margin'] = {
         'l': 30, 'r': 10, 'b': 30, 't': 10
     }
     fig['layout']['xaxis'] = {
-        'range' : [1,30]
+        'range' : [1,40],
+        'showticklabels' : False,
+        'showline': True,
     }
     fig['layout']['yaxis'] = {
-        'range': [1,30]
+        'range': [1,40],
+        'showticklabels' : False,
+        'showline': True,
     }
-    fig.append_trace({
-        'x': [random.randint(1,20) for i in range(10)],
-        'y': [random.randint(1,20) for i in range(10)],
-        'type' : 'scatter',
-        'mode' : 'markers',
-        'marker' : dict(
-            size=size,
-            sizemode='area',
-            sizeref=2.*max(size)/(40.**2),
-            sizemin=4,
-            color=['rgb(93, 164, 214)', 'rgb(255, 144, 14)',
-               'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
-            opacity=[1, 0.8, 0.6, 0.4],
-        )
-    },1,1)
+    fig.append_trace(config_trace(
+        x = 15,
+        y = 15,
+        text = "sports",
+        type = 'scatter',
+        mode = 'markers',
+        name = 'Sports',
+        color = 'rgb(93, 164, 214)',
+        size = random.randint(10,25),
+        sizemode = 'area',
+        sizeref = 2.*max(size)/(40.**2),
+        sizemin = 4
+    ),1,1)
+    fig.append_trace(config_trace(
+        x = 17,
+        y = 15,
+        text = "sports",
+        type = 'scatter',
+        mode = 'markers',
+        name = 'Media',
+        color = 'rgb(255, 144, 14)',
+        size = random.randint(6,50),
+        sizemode = 'area',
+        sizeref = 2.*max(size)/(40.**2),
+        sizemin = 4
+    ),1,1)
+    fig.append_trace(config_trace(
+        x = 20,
+        y = 17,
+        text = "sports",
+        type = 'scatter',
+        mode = 'markers',
+        name = 'Travel',
+        color = 'rgb(44, 160, 101)',
+        size = random.randint(10,25),
+        sizemode = 'area',
+        sizeref = 2.*max(size)/(40.**2),
+        sizemin = 4
+    ),1,1)
+    fig.append_trace(config_trace(
+        x = 18,
+        y = 20,
+        text = "dining",
+        type = 'scatter',
+        mode = 'markers',
+        name = 'Dining',
+        color = 'rgb(255, 65, 54)',
+        size = random.randint(25,30),
+        sizemode = 'area',
+        sizeref = 2.*max(size)/(40.**2),
+        sizemin = 4
+    ),1,1)
+
     return fig
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host="0.0.0.0", port=8000)
+
 
