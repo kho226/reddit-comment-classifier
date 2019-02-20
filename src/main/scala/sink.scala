@@ -65,7 +65,7 @@ class StreamsProcessor(brokers: String) {
                           .format("kafka")
                           .option("kafka.bootstrap.servers", brokers)
                           .option("subscribe", "persons-avro")
-			  .option("failOnDataLoss", "false")
+			                    .option("failOnDataLoss", "false")
                           .load()
 
 
