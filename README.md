@@ -9,14 +9,14 @@
 
 Reddit generates ~2 million comments / day. 480,000 of those comments are banned / flagged as inapropriate. The rules for banning / flagging comments are rule or regex based. They are inefficient.
 
-Social Media companies take platform abuse seriously.
+Imagine you are a data scientist or platform moderator looking to analyze a large body of text. This entails finding a dataset, cleaning it, and dumping it into a datastore. Then after building your query, your results are totally irrelevant to your initial question.
 
-This project aims to automate the process of collecting the necessary data to run in depth analysis on reddit comments. Latent Diriclecht Allocation is used to extract topics from a corpus of reddit comments. A neural network is trained on these topics of intent. A data pipeline ingests reddit data to classify reddit comments by intent in real-time.
+This project aims to lower the barrier to entry for in-depth analysis over a large body of text. Trenditt is a real-time streaming platform that enables realtime analysis over a large body of text.
 
 # Approach
 ```
       ├── README.md 
-      ├── run.sh
+      ├── pom.xml
       ├── src
       │   └──h1b_counting.py
       │   └──dataProcessor.py
