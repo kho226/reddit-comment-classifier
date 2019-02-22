@@ -12,7 +12,7 @@ object Constants {
   val agesTopic = "ages"
 
   val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-
+  
   val reddit_schema = new StructType()
     .add("archived", DataTypes.BooleanType)
     .add("author", DataTypes.StringType)
@@ -51,3 +51,4 @@ object Constants {
     .add("subreddit_name_prefixed", DataTypes.StringType)
     .add("subreddit_type", DataTypes.StringType)
 }
+

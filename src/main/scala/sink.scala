@@ -4,20 +4,18 @@
 package trenddit
 
 import java.time.{LocalDate, Period}
-
 import trenddit.Constants.reddit_schema
 import org.apache.spark.{SparkConf, SparkContext}
+import proj.Constants
 import org.apache.spark.sql.{SparkSession, DataFrame}
 import org.apache.spark.sql.expressions.UserDefinedFunction
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{DataTypes, StructType}
-
 import org.apache.spark.rdd.RDD
 
-//elastic search imports
+//elasticsearch imports
 import com.typesafe.config.ConfigFactory
 import org.elasticsearch.hadoop.cfg.ConfigurationOptions
-
 
 // define the processing in the sink
 class RandomForestMLSinkProvider extends MLSinkProvider {
@@ -30,12 +28,18 @@ class RandomForestMLSinkProvider extends MLSinkProvider {
 object StreamsProcessor {
   def main(args: Array[String]): Unit = {
     new StreamsProcessor("enter your broker address:port").process()
+
+object StreamsProcessor {
+  def main(args: Array[String]): Unit = {
+    new StreamsProcessor("localhost:9092").process()
   }
 }
 
 class StreamsProcessor(brokers: String) {
 
   private val config = ConfigFactory.load()
+  private val master = config.getString("spark.master")
+  private val pathToJSONResource = config.getString("spark.json.resource.path")
   private val master = config.getString("spark.master")
   private val pathToJSONResource = config.getString("spark.json.resource.path")
   private val elasticsearchUser = config.getString("spark.elasticsearch.username")
@@ -46,6 +50,12 @@ class StreamsProcessor(brokers: String) {
   private val destination = config.getString("spark.elasticsearch.data.source")
   private val checkpointLocation = config.getString("spark.elasticsearch.checkpoint.location")
   private val docType = config.getString("spark.elasticsearch.doc.type")
+  private val outputMode = config.getString("spark.elasticsearch.output.mode")
+  private val destination = config.getString("spark.elasticsearch.data.source")
+  private val checkpointLocation = config.getString("spark.elasticsearch.checkpoint.location")
+  private val index = config.getString("spark.elasticsearch.index")
+  private val docType = config.getString("spark.elasticsearch.doc.type")
+  private val indexAndDocType = s"$index/$docType"
 
   def process(): Unit = {
 
