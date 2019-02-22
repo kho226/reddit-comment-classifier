@@ -1,3 +1,7 @@
+//Author: Kyle Ong
+//Date: 02/02/2019
+//MLSink class for trenddit spark structured streaming
+
 package trenddit
 
 import org.apache.spark.sql.execution.streaming.Sink

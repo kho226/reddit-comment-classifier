@@ -1,3 +1,6 @@
+//Author: Kyle Ong
+//Date: 02/02/2019
+//StreamProcessor for trenddit spark structured streaming
 package trenddit
 
 import java.time.{LocalDate, Period}

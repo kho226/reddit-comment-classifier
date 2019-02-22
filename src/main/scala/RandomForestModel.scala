@@ -1,3 +1,7 @@
+//Author: Kyle Ong
+//Date: 02/02/2019
+//RandomForestModel for trenddit spark structured streaming
+
 package trenddit
 
 import org.apache.spark.ml.PipelineModel

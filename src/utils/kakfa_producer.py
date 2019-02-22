@@ -1,3 +1,12 @@
+'''
+    Author: Kyle Ong
+    Date: 02/18/19
+
+    Kafka producer for trenddit
+
+    downloads data from s3
+    publishes them to a kafka topic
+'''
 from confluent_kafka import Producer
 import boto3
 

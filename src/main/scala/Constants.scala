@@ -1,3 +1,7 @@
+//Author: Kyle Ong
+//Date: 02/02/2019
+//Constans for trenddit spark structured streaming
+
 package trenddit
 import java.time.format.DateTimeFormatter
 import org.apache.spark.sql.types.{DataTypes, StructType}
@@ -15,7 +19,6 @@ object Constants {
     .add("author_created_utc", DataTypes.LongType)
     .add("author_flair_background_color", DataTypes.StringType)
     .add("author_flair_css_class", DataTypes.StringType)
-    //.add("author_flair_richtext", ArrayType()) //array of bytes
     .add("author_flair_template_id", DataTypes.StringType)
     .add("author_flair_text", DataTypes.StringType)
     .add("author_flair_text_color", DataTypes.StringType)
@@ -32,7 +35,6 @@ object Constants {
     .add("distinguished", DataTypes.StringType)
     .add("edited", DataTypes.BooleanType)
     .add("gilded", DataTypes.LongType)
-    //.add("gildings", DataTypes.StructField)
     .add("id", DataTypes.StringType)
     .add("is_submitter", DataTypes.BooleanType)
     .add("link_id", DataTypes.StringType)

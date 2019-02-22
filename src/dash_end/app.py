@@ -1,3 +1,17 @@
+```
+''' 
+    Author: Kyle Ong
+    Date:  02/10/2019
+
+    entry point for front end of trenddit
+
+    fetches data from elasticsearch and redis
+    redis contains past five days of histrical data
+    elasticsearch contains all historical data
+
+    realtime bubble chart refreshes every 300 milliseconds
+'''
+
 # -*- coding: utf-8 -*-
 import dash
 import dash_core_components as dcc
