@@ -1,10 +1,9 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <groupId> proj </groupId>
-    <artifactId> proj_0.0.1</artifactId>
-    <version> 0.0.1 </version>
-    <name> "Reddit Intent" </name>
 
+    <groupId> Trenddit </groupId>
+    <artifactId> trenddit_0.0.1</artifactId>
+    <version> 0.0.1 </version> <name> "Trenddit" </name>
     <build>
         <plugins>
         <plugin>
@@ -17,7 +16,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>proj.StreamsProcessor</mainClass>
+                            <mainClass>trenddit.StreamsProcessor</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -44,7 +43,6 @@
             </plugin>
         </plugins> 
     </build>
-
     <pluginRepositories>
         <pluginRepository>
             <id>scala-tools.org</id>
@@ -52,6 +50,16 @@
             <url>http://scala-tools.org/repo-releases</url>
     </pluginRepository>
     </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <url>http://packages.confluent.io/maven/</url>
+        </repository>
+        <repository>
+            <id> typesafe </id>
+            <url>http://repo.typesafe.com/typesafe/maven-releases/</url>
+        </repository>
+    </repositories>
 
     <repositories>
         <repository>
@@ -69,13 +77,18 @@
                 <url>http://central.maven.org/maven2/ </url>
         </repository>
     </repositories>
-
     <dependencies>
          <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>2.11.8</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.11</artifactId>
+            <version>2.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -86,15 +99,14 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.11</artifactId>
             <version>2.2.1</version>
-        </dependency>
-        
+        </dependency>         
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql-kafka-0-10_2.11</artifactId>
             <version>2.2.1</version>
+        </dependency>
             <scope>provided</scope>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming-kafka-0-10 -->
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -107,29 +119,17 @@
             <artifactId>elasticsearch-hadoop</artifactId>
             <version>6.5.2</version>
         </dependency>
-        
-
         <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>2.0.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.typesafe/config -->
+        <!-- https://mvnrepository.com/artifact/com.typesafe.config/config -->
         <dependency>
-            <groupId>com.typesafe</groupId>
+            <groupId>com.typesafe.config</groupId>
             <artifactId>config</artifactId>
-            <version>1.3.3</version>
+            <version>0.3.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.redislabs/spark-redis -->
-        <dependency>
-            <groupId>com.redislabs</groupId>
-            <artifactId>spark-redis</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-
-
     </dependencies>
 </project>
