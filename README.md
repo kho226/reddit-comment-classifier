@@ -1,5 +1,6 @@
 # Table of Contents
 1. [Problem](README.md#problem)
+2. [Architecture] (README.md#architecture)
 2. [Approach](README.md#approach)
 3. [Run Instructions](README.md#run-instructions)
 4. [Test Instructions](README.md#test-instructions)
@@ -12,6 +13,9 @@ Reddit generates ~2 million comments / day. 480,000 of those comments are banned
 Imagine you are a data scientist or platform moderator looking to analyze a large body of text. This entails finding a dataset, cleaning it, and dumping it into a datastore. Then after building your query, your results are totally irrelevant to your initial question.
 
 This project aims to lower the barrier to entry for in-depth analysis over a large body of text. Trenditt is a real-time streaming platform that enables realtime analysis over a large body of text.
+
+# Architecture
+![alt text] (https://raw.githubusercontent.com/kho226/trenddit/dash_end/Screen\ Shot\ 2019-03-18\ at\ 3.35.07\ PM.png)
 
 # Approach
 ```
