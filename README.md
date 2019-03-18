@@ -15,7 +15,7 @@ Imagine you are a data scientist or platform moderator looking to analyze a larg
 This project aims to lower the barrier to entry for in-depth analysis over a large body of text. Trenditt is a real-time streaming platform that enables realtime analysis over a large body of text.
 
 # Architecture
-![alt text] (https://raw.githubusercontent.com/kho226/trenddit/dash_end/architecture.png)
+![alt text](https://raw.githubusercontent.com/kho226/trenddit/dash_end/architecture.png)
 
 # Approach
 ```
